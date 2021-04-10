@@ -1,0 +1,72 @@
+:root {
+	--a-color: var(--red);
+	--b-color: var(--yellow);
+	--c-color: var(--green);
+	--d-color: var(--blue);
+	--question-country-color: var(--teal);
+}
+
+#game #toprow {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+@media only screen and (max-width: 600px) {
+	#game #toprow {
+		flex-direction: column-reverse;
+	}
+}
+
+#game #question {
+	font-size: 1.5em;
+}
+
+#game #score {
+	--good: var(--green);
+	--okay: var(--yellow);
+	--bad: var(--red);
+	color: var(--good);
+}
+
+#game .answer {
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+	align-content: center;
+}
+
+#game .answer .text {
+	width: 50%;
+}
+
+#game .answer .letter {
+	font-size: 1.5em;
+	padding: 1em;
+	border: 0.05em var(--default-bg) solid;
+	border-radius: 0.25em;
+}
+
+#game .answer #a {
+	background-color: var(--a-color);
+	border-color: var(--a-color);
+}
+
+#game .answer #b {
+	background-color: var(--b-color);
+	border-color: var(--b-color);
+}
+
+#game .answer #c {
+	background-color: var(--c-color);
+	border-color: var(--c-color);
+}
+
+#game .answer #d {
+	background-color: var(--d-color);
+	border-color: var(--d-color);
+}
+
+span#questionCountry {
+	background-color: var(--question-country-color);
+}
