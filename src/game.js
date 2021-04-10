@@ -1,13 +1,5 @@
 "use strict";
 
-var capitals = { 
-	"England": "London",
-	"France": "Paris",
-	"the USA": "Washington D.C.",
-	"India": "New Dehli",
-	"Bangladesh": "Dhaka"
-}
-
 var question_list = null;
 const capitals_list = Object.values(capitals);
 const date = new Date();
