@@ -1,0 +1,6 @@
+capitals_quiz
+-------------
+
+
+1. `make`
+2. Run any old webserver with a directory pointed at `src`
