@@ -21,11 +21,16 @@ def main(args):
     r = {}
 
     for country in countries:
-        if len(country['capital']) < 1 or country['capital'][0] is None:
+        if len(country['capital']) < 1 or country['capital'][0] == "" or not country['independent']:
             continue
-        r[country['name']['common']] = country['capital'][0]
+        r[country['name']['common']] = {
+                'capital': country['capital'][0],
+                'regions': [country['region'],
+                'subregion': country['subregion'],
+                'languages': country['languages']
+                }
 
-    print('capitals = ', end='')
+    print('countries = ', end='')
     print(json.dumps(r))
 
     return 0

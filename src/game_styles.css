@@ -6,6 +6,26 @@
 	--question-country-color: var(--teal);
 }
 
+.correct {
+	animation: correct .2s;
+}
+
+.incorrect {
+	animation: incorrect .2s;
+}
+
+@keyframes correct {
+	0%   { background: var(--default-bg); }
+	50%  { background: var(--green); }
+	100% { background: var(--default-bg); }
+}
+
+@keyframes incorrect {
+	0%   { background: var(--default-bg); }
+	50%  { background: var(--red); }
+	100% { background: var(--default-bg); }
+}
+
 #game #toprow {
 	display: flex;
 	justify-content: space-between;
@@ -69,4 +89,28 @@
 
 span#questionCountry {
 	background-color: var(--question-country-color);
+}
+
+#settings #region_selector {
+	width: 100%;
+	max-width: 100%;
+	background: var(--dark-bg);
+	font-size: 1.5em;
+	padding: 1em;
+	border: none;
+	border-radius: 0.25em;
+	box-sizing: border-box;
+}
+
+#settings {
+	width: 100% 
+}
+
+#settings #selector_results {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+#settings .selector_result {
+	padding: 1em;
 }
