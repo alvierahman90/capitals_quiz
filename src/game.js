@@ -1,12 +1,5 @@
 "use strict";
 
-var question_list = null;
-const capitals_list = Object.values(countries).map(country => country.capital);
-const regionList = [...new Set(Object.values(countries).map(country => country.region))]
-	.concat([...new Set(Object.values(countries).map(country => country.subregion))]);
-const date = new Date();
-var selectorMatches = []
-
 const answersHTML = document.getElementById('answers');
 const answerAHTML = document.getElementById('answer_a');
 const answerBHTML = document.getElementById('answer_b');
@@ -19,6 +12,15 @@ const selectorHTML = document.getElementById('region_selector');
 const selectorResultsHTML = document.getElementById('selector_results');
 const questionHTML = document.getElementById('question');
 
+const ALL_REGIONS = "All Regions";
+
+const capitals_list = Object.values(countries).map(country => country.capital);
+const regionList = [...new Set(Object.values(countries).map(country => country.region))]
+	.concat([...new Set(Object.values(countries).map(country => country.subregion))]);
+const date = new Date();
+
+var question_list = null;
+var selectorMatches = []
 var state = {
 	"score": 0,
 	"max_score": 0,
@@ -27,10 +29,12 @@ var state = {
 	"finishedGame": true,
 };
 
+
+// set up game
 function init() {
-	// reset states list, score, end_time; start timer for game;
+	// generate question list
 	var regex;
-	if (selectorHTML.value === "") {
+	if (selectorHTML.value == "" || selectorHTML.value == ALL_REGIONS) {
 		regex = new RegExp(".*");
 	} else {
 		regex = new RegExp(selectorHTML.value, 'gi');
@@ -38,18 +42,25 @@ function init() {
 	question_list = Object.keys(countries)
 		.filter(c => countries[c].region.match(regex) || countries[c].subregion.match(regex))
 		.sort(() => Math.random()-0.5);
+
+	// set up state variable
+	state.end_time = 0;
+	state.finishedGame = false;
 	state.maxScore = question_list.length;
+	state.score = 0;
+	state.start_time = date.getTime();
+
+	// show and hide appropriate elements
 	answersHTML.style.display = "";
 	settingsHTML.style.display = "none";
-	state.finishedGame = false;
-	state.score = 0;
-	state.end_time = 0;
-	state.start_time = date.getTime();
 	questionHTML.onclick = deinit;
+
+	// start game
 	updateState();
 	updateScreen();
 }
 
+// stop game, go back to start screen
 function deinit() {
 	answersHTML.style.display = "none";
 	settingsHTML.style.display = "";
