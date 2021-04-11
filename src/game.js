@@ -105,7 +105,7 @@ function processClick(answer) {
 	state.score += 1 ? state.options[answer] == state.answer : 0;
 	console.log(state.options[answer] == state.answer ? 'correct' : 'incorrect')
 	bodyHTML.classList.add(state.options[answer] == state.answer ? 'correct' : 'incorrect')
-	setTimeout(() => bodyHTML.classList = [], 200)
+	setTimeout(() => bodyHTML.classList = [], 500)
 
 	console.log("got click: " + answer);
 	updateState();

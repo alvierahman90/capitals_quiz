@@ -7,11 +7,11 @@
 }
 
 .correct {
-	animation: correct .2s;
+	animation: correct .5s;
 }
 
 .incorrect {
-	animation: incorrect .2s;
+	animation: incorrect .5s;
 }
 
 @keyframes correct {
