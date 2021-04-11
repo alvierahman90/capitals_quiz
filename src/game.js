@@ -83,10 +83,11 @@ function updateState() {
 	state.answer = countries[newQuestion].capital;
 }
 
+// update HTML elements to reflect values of state
 function updateScreen(){
 	scoreHTML.innerHTML = state.score + "/" + state.maxScore;
 	if (state.finishedGame) {
-		questionHTML.innerHTML = "you finishedeededede!!! tap here or press space to restart";
+		questionHTML.innerHTML = "woooooooo!! tap here or press enter to restart";
 		answers.style.display = "none";
 		return;
 	}
