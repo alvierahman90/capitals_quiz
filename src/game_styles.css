@@ -26,27 +26,27 @@
 	100% { background: var(--default-bg); }
 }
 
-#game #toprow {
+#toprow {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 }
 
 @media only screen and (max-width: 600px) {
-	#game #toprow {
+	#toprow {
 		flex-direction: column-reverse;
 	}
 }
 
-#game #question {
+#question {
 	font-size: 1.5em;
 }
 
-#game #score {
+#score {
 	--good: var(--green);
 	--okay: var(--yellow);
 	--bad: var(--red);
-	color: var(--good);
+	background: var(--good);
 }
 
 #game .answer {
@@ -67,22 +67,22 @@
 	border-radius: 0.25em;
 }
 
-#game .answer #a {
+#a {
 	background-color: var(--a-color);
 	border-color: var(--a-color);
 }
 
-#game .answer #b {
+#b {
 	background-color: var(--b-color);
 	border-color: var(--b-color);
 }
 
-#game .answer #c {
+#c {
 	background-color: var(--c-color);
 	border-color: var(--c-color);
 }
 
-#game .answer #d {
+#d {
 	background-color: var(--d-color);
 	border-color: var(--d-color);
 }
@@ -91,9 +91,8 @@ span#questionCountry {
 	background-color: var(--question-country-color);
 }
 
-#settings #region_selector {
+#region_selector {
 	width: 100%;
-	max-width: 100%;
 	background: var(--dark-bg);
 	font-size: 1.5em;
 	padding: 1em;
@@ -106,11 +105,12 @@ span#questionCountry {
 	width: 100% 
 }
 
-#settings #selector_results {
+#selector_results {
 	display: flex;
 	flex-wrap: wrap;
+	justify-content: center;
 }
 
 #settings .selector_result {
-	padding: 1em;
+	margin: 1em;
 }
