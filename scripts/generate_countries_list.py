@@ -25,7 +25,7 @@ def main(args):
             continue
         r[country['name']['common']] = {
                 'capital': country['capital'][0],
-                'regions': [country['region'],
+                'region': country['region'],
                 'subregion': country['subregion'],
                 'languages': country['languages']
                 }
