@@ -123,9 +123,11 @@ function setSelectorMatches(value){
 
 function displaySelectorMatches(){
 	selectorResultsHTML.innerHTML = selectorMatches
+		.concat(ALL_REGIONS)
 		.map(region => {
-			return `<div class="selector_result" onclick="setSelectorValue('${region}')"> ${region} </div>`
+			return `<div class="selector_result" onclick="setSelectorValue('${region}');init()"> ${region} </div>`
 		})
+		.sort()
 		.join('');
 }
 
