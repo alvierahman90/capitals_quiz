@@ -28,7 +28,7 @@ def main(args):
                 'region': country['region'],
                 'subregion': country['subregion'],
                 'languages': country['languages']
-                }
+        }
 
     print('countries = ', end='')
     print(json.dumps(r))

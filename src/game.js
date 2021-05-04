@@ -108,7 +108,7 @@ function updateScreen(){
     answerBHTML.getElementsByClassName("text")[0].innerHTML = state.options[1];
     answerCHTML.getElementsByClassName("text")[0].innerHTML = state.options[2];
     answerDHTML.getElementsByClassName("text")[0].innerHTML = state.options[3];
-    questionHTML.innerHTML = "what is the capital of <span id=\"questionCountry\">" + state.question + "</span>?";
+    questionHTML.innerHTML = `what is the capital of <span id="questionCountry">${state.question}</span>?`;
 }
 
 
