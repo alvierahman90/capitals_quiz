@@ -39,8 +39,8 @@ var resultsChart = new Chart(
 					labels: [],
 					data: [],
 					backgroundColor: [
-						"#ab4642",
 						"#a1b56c",
+						"#ab4642",
 					]
 
 				}
