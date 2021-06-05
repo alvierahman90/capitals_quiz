@@ -8,6 +8,9 @@ const answerBHTML = document.getElementById("answer_b");
 const answerCHTML = document.getElementById("answer_c");
 const answerDHTML = document.getElementById("answer_d");
 const bodyHTML = document.getElementsByTagName("body")[0]
+const incorrectAnswersTable = document.getElementById('incorrectAnswersTable');
+const correctAnswersTable = document.getElementById('correctAnswersTable');
+const resultsHTML = document.getElementById("results");
 const scoreHTML = document.getElementById("score");
 const settingsHTML = document.getElementById("settings");
 const selectorHTML = document.getElementById("region_selector");
@@ -22,6 +25,34 @@ const regionList = [...new Set(Object.values(countries).map(country => country.r
 const date = new Date();
 
 var questionList, selectorMatches, state;
+
+var resultsChart = new Chart(
+	document.getElementById('resultsChart'),
+	{
+		type: 'doughnut',
+		data: {
+			labels: [],
+			datasets: [
+				{
+					labels: [],
+					data: [],
+					backgroundColor: [
+						"#ab4642",
+						"#dc9656",
+						"#f7ca88",
+						"#a1b56c",
+						"#86c1b9",
+						"#7cafc2",
+						"#ba8baf",
+						"#a16946"
+					]
+
+				}
+			]
+		},
+		options: {}
+	}
+);
 
 
 // set up game
@@ -42,11 +73,16 @@ function init() {
     state.maxScore = questionList.length;
     state.score = 0;
     state.startTime = date.getTime();
+    state.correctAnswers = [];
+    state.incorrectAnswers = [];
+    state.userAnswer = null;
 
     // show and hide appropriate elements
     answersHTML.style.display = "";
     settingsHTML.style.display = "none";
     questionHTML.onclick = deinit;
+    incorrectAnswersTable.innerHTML = "<tr> <th> country </th> <th> capital </th> <th> your answer </th> </tr>";
+    correctAnswersTable.innerHTML = "<tr> <th> country </th> <th> capital </th>  </tr>";
 
     // start game
     updateState();
@@ -57,6 +93,7 @@ function init() {
 // stop game, go back to start screen
 function deinit() {
     answersHTML.style.display = "none";
+    resultsHTML.style.display = "none";
     settingsHTML.style.display = "";
     questionHTML.innerHTML = "tap here or press enter to start";
     scoreHTML.innerHTML = "score";
@@ -100,8 +137,7 @@ function updateState() {
 function updateScreen(){
     scoreHTML.innerHTML = state.score + "/" + state.maxScore;
     if (state.finishedGame) {
-        questionHTML.innerHTML = "woooooooo!! tap here or press enter to restart";
-        answers.style.display = "none";
+	    displayEndScreen();
         return;
     }
     answerAHTML.getElementsByClassName("text")[0].innerHTML = state.options[0];
@@ -111,12 +147,57 @@ function updateScreen(){
     questionHTML.innerHTML = `what is the capital of <span id="questionCountry">${state.question}</span>?`;
 }
 
+function displayEndScreen() {
+        questionHTML.innerHTML = "you did it! click here to restart";
+        answers.style.display = "none";
+        answers.style.display = "none";
+
+	state.incorrectAnswers.forEach(ans => {
+		var tr = document.createElement('tr');
+		tr.appendChild(document.createElement('td'))
+		tr.lastChild.innerHTML = ans.question
+		tr.appendChild(document.createElement('td'))
+		tr.lastChild.innerHTML = ans.answer
+		tr.appendChild(document.createElement('td'))
+		tr.lastChild.innerHTML = ans.options[ans.userAnswer]
+		incorrectAnswersTable.appendChild(tr);
+	})
+	if (state.incorrectAnswers.length <= 0)
+		incorrectAnswersTable.innerHTML = "no incorrect answers! go you!";
+
+	state.correctAnswers.forEach(ans => {
+		var tr = document.createElement('tr');
+		tr.appendChild(document.createElement('td'))
+		tr.lastChild.innerHTML = ans.question
+		tr.appendChild(document.createElement('td'))
+		tr.lastChild.innerHTML = ans.answer
+		correctAnswersTable.appendChild(tr);
+	})
+	if (state.correctAnswers.length <= 0)
+		correctAnswersTable.innerHTML = "no correct answers. better luck next time :')";
+
+	resultsChart.config.data.labels = ["correct", "incorrect"];
+	resultsChart.config.data.labels = ["correct", "incorrect"];
+	resultsChart.config.data.datasets[0].labels = ["correct", "incorrect"];
+	resultsChart.config.data.datasets[0].data = [state.correctAnswers.length,state.incorrectAnswers.length];
+	resultsChart.update();
+	resultsHTML.style.display = "";
+}
+
 
 function processClick(answer) {
     if (state.finishedGame) return;
     // check if answer to previous question  was correct
     var isAnswerCorrect = state.options[answer] == state.answer
     state.score += isAnswerCorrect ? 1 : 0;
+    state.userAnswer = answer;
+    state[isAnswerCorrect ? "correctAnswers" : "incorrectAnswers"].push({
+        "question": state.question,
+        "options": state.options,
+        "userAnswer": state.userAnswer,
+        "answer": state.answer
+    });
+    state.userAnswer = null;
 
     // change background color based on if answer was correct
     bodyHTML.classList.add(isAnswerCorrect ? "correct" : "incorrect")
