@@ -40,13 +40,7 @@ var resultsChart = new Chart(
 					data: [],
 					backgroundColor: [
 						"#ab4642",
-						"#dc9656",
-						"#f7ca88",
 						"#a1b56c",
-						"#86c1b9",
-						"#7cafc2",
-						"#ba8baf",
-						"#a16946"
 					]
 
 				}
