@@ -49,6 +49,8 @@
 	background: var(--good);
 }
 
+#previousQuestionAnswer { background: var(--green) }
+
 #game .answer {
 	display: flex;
 	justify-content: space-evenly;

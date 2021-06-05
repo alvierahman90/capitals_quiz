@@ -10,6 +10,8 @@ const answerDHTML = document.getElementById("answer_d");
 const bodyHTML = document.getElementsByTagName("body")[0]
 const incorrectAnswersTable = document.getElementById('incorrectAnswersTable');
 const correctAnswersTable = document.getElementById('correctAnswersTable');
+const previousQuestionAnswer = document.getElementById('previousQuestionAnswer');
+const previousQuestionText = document.getElementById('previousQuestionText');
 const resultsHTML = document.getElementById("results");
 const scoreHTML = document.getElementById("score");
 const settingsHTML = document.getElementById("settings");
@@ -127,6 +129,11 @@ function updateState() {
     }
     options[Math.floor(Math.random()*4)] = countries[newQuestion].capital;
 
+    if (state.question) state.previousQuestion = {
+        "question": state.question,
+        "options": state.options,
+        "answer": state.answer
+    };
     state.question = newQuestion;
     state.options = options;
     state.answer = countries[newQuestion].capital;
@@ -145,6 +152,10 @@ function updateScreen(){
     answerCHTML.getElementsByClassName("text")[0].innerHTML = state.options[2];
     answerDHTML.getElementsByClassName("text")[0].innerHTML = state.options[3];
     questionHTML.innerHTML = `what is the capital of <span id="questionCountry">${state.question}</span>?`;
+    if (state.previousQuestion ) {
+        previousQuestionAnswer.innerHTML = state.previousQuestion.answer;
+        previousQuestionText.style.display = "";
+    }
 }
 
 function displayEndScreen() {
