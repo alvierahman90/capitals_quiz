@@ -18,6 +18,16 @@ const settingsHTML = document.getElementById("settings");
 const selectorHTML = document.getElementById("region_selector");
 const selectorResultsHTML = document.getElementById("selector_results");
 const questionHTML = document.getElementById("question");
+const timeHTML = document.getElementById("time");
+
+var gameTimeStartTime = 0;
+var gameTimeIntervalId = 0;
+
+function updateTime() {
+    const secondsPassed = ((new Date().getTime() - gameTimeStartTime.getTime())/1000)
+        .toFixed(3);
+    timeHTML.innerHTML = secondsPassed;
+}
 
 const capitals_list = Object.values(countries).map(country => country.capital);
 const regionList = [...new Set(Object.values(countries).map(country => country.region))]
@@ -83,17 +93,22 @@ function init() {
     // start game
     updateState();
     updateScreen();
+    gameTimeStartTime = new Date()
+    gameTimeIntervalId = setInterval(updateTime, 1);
 }
 
 
 // stop game, go back to start screen
 function deinit() {
+    clearInterval(gameTimeIntervalId);
+    
     answersHTML.style.display = "none";
     resultsHTML.style.display = "none";
     settingsHTML.style.display = "";
     questionHTML.innerHTML = "tap here or press enter to start";
     scoreHTML.innerHTML = "score";
     questionHTML.onclick = init;
+    timeHTML.innerHTML = "time";
 
     questionList = null;
     selectorMatches = []
@@ -152,10 +167,13 @@ function updateScreen(){
     }
 }
 
+
 function displayEndScreen() {
-        questionHTML.innerHTML = "you did it! click here to restart";
-        answers.style.display = "none";
-        answers.style.display = "none";
+    questionHTML.innerHTML = "you did it! click here to restart";
+    answers.style.display = "none";
+    answers.style.display = "none";
+    
+    clearInterval(gameTimeIntervalId);
 
 	state.incorrectAnswers.forEach(ans => {
 		var tr = document.createElement('tr');
@@ -234,7 +252,6 @@ function displaySelectorMatches(){
 function setSelectorValue(value) {
     selectorHTML.value = value;
 }
-
 
 answerAHTML.addEventListener("click", () => processClick(0));
 answerBHTML.addEventListener("click", () => processClick(1));
