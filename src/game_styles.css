@@ -49,6 +49,18 @@
 	background: var(--good);
 }
 
+#time {
+    background: var(--blue);
+}
+
+#gameinfo {
+    display: flex;
+}
+
+#gameinfo * {
+    margin: 0 0.5em 0 0.5em;
+}
+
 #previousQuestionAnswer { background: var(--green) }
 
 #game .answer {
