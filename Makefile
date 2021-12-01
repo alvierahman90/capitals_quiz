@@ -5,7 +5,7 @@ countries:
 	git submodule update
 
 countries.js: countries
-	python scripts/generate_countries_list.py countries/countries.json > countries.js
+	python3 scripts/generate_countries_list.py countries/countries.json > countries.js
 
 clean:
 	rm -rf countries.js
