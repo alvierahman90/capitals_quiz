@@ -2,7 +2,7 @@ all: countries.js
 
 countries/countries.json: .SUBMODULES
 
-countries.js: countries/countries.json
+countries.js: countries/countries.json .PHONY
 	python3 scripts/generate_countries_list.py countries/countries.json > countries.js
 
 clean:
@@ -13,3 +13,4 @@ clean:
 	git submodule init
 	git submodule update
 
+.PHONY:
