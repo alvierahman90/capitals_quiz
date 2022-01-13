@@ -42,7 +42,7 @@ const getQuestionHTML = (state) => {
   return `what is the capital of <span id="questionCountry">${state.question}</span>?`
 }
 
-const answer_list = Object.values(getMasterQuestionList()).map(item => item.answer);
+const answer_list = () => Object.values(getMasterQuestionList()).map(item => item.answer);
 
 
 const regionList = [...new Set(Object.values(getMasterQuestionList()).map(item => item.region))]
@@ -146,7 +146,7 @@ function updateState() {
     var newQuestion = questionList.pop();
     var options = []
     while (options.length < 4) {
-        var c = answer_list[Math.floor(Math.random()*answer_list.length)];
+        var c = answer_list()[Math.floor(Math.random()*answer_list().length)];
         if (c !== getMasterQuestionList()[newQuestion].answer && !options.includes(c)){
             options.push(c);
         }
