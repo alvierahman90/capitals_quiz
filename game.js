@@ -13,19 +13,19 @@ const correctAnswersTable = document.getElementById('correctAnswersTable');
 const guessCheckboxHTML = document.getElementById('guessCheckbox');
 const previousQuestionAnswer = document.getElementById('previousQuestionAnswer');
 const previousQuestionText = document.getElementById('previousQuestionText');
+const regionListHTML = document.getElementById("regionList");
 const resultsHTML = document.getElementById("results");
 const scoreHTML = document.getElementById("score");
 const settingsHTML = document.getElementById("settings");
-const selectorHTML = document.getElementById("region_selector");
-const selectorResultsHTML = document.getElementById("selector_results");
 const questionHTML = document.getElementById("question");
 const timeHTML = document.getElementById("time");
 
 var gameTimeStartTime = 0;
 var gameTimeIntervalId = 0;
+var selectedRegion = null;
 const guessCountry = () => guessCheckboxHTML.checked;
 
-function updateTime() {
+const updateTime = () => {
     const secondsPassed = ((new Date().getTime() - gameTimeStartTime.getTime())/1000)
         .toFixed(3);
     timeHTML.innerHTML = secondsPassed;
@@ -45,13 +45,13 @@ const getQuestionHTML = (state) => {
 const answer_list = () => Object.values(getMasterQuestionList()).map(item => item.answer);
 
 
-const regionList = [...new Set(Object.values(getMasterQuestionList()).map(item => item.region))]
+const regionList = () => [...new Set(Object.values(getMasterQuestionList()).map(item => item.region))]
     .concat([...new Set(Object.values(getMasterQuestionList()).map(item => item.subregion))])
     .concat([ALL_REGIONS])
     .sort();
 const date = new Date();
 
-var questionList, selectorMatches, state;
+var questionList, state;
 
 var resultsChart = new Chart(
 	document.getElementById('resultsChart'),
@@ -79,12 +79,8 @@ var resultsChart = new Chart(
 // set up game
 function init() {
     // generate question list
-    var regex;
-    if (selectorHTML.value == "" || selectorHTML.value == ALL_REGIONS) regex = new RegExp(".*");
-    else regex = new RegExp(selectorHTML.value, "gi");
-
     questionList = Object.keys(getMasterQuestionList())
-        .filter(c => getMasterQuestionList()[c].region.match(regex) || getMasterQuestionList()[c].subregion.match(regex))
+        .filter(c => getMasterQuestionList()[c].region == selectedRegion || getMasterQuestionList()[c].subregion == selectedRegion)
         .sort(() => Math.random()-0.5);
 
     // set up state variable
@@ -120,13 +116,12 @@ function deinit() {
     answersHTML.style.display = "none";
     resultsHTML.style.display = "none";
     settingsHTML.style.display = "";
-    questionHTML.innerHTML = "tap here or press enter to start";
+    questionHTML.innerHTML = "capitals_quiz - select a region to start!";
     scoreHTML.innerHTML = "score";
     questionHTML.onclick = init;
     timeHTML.innerHTML = "time";
 
     questionList = null;
-    selectorMatches = []
     state = {
         "score": 0,
         "maxScore": 0,
@@ -237,7 +232,7 @@ function processClick(answer) {
     });
     state.userAnswer = null;
 
-    // change background color based on if answer was correct
+    // change background color based on if answer was correct for 500ms
     bodyHTML.classList.add(isAnswerCorrect ? "correct" : "incorrect")
     setTimeout(() => bodyHTML.classList = [], 500)
 
@@ -246,27 +241,11 @@ function processClick(answer) {
 }
 
 
-function setSelectorMatches(value){
-    const regex = new RegExp(selectorHTML.value, "gi");
-    selectorMatches = regionList
-            .filter(region => region.match(regex))
-    displaySelectorMatches();
+function setRegion(region) {
+    selectedRegion = region
 }
 
-
-function displaySelectorMatches(){
-    selectorResultsHTML.innerHTML = selectorMatches
-        .map(region => {
-            return `<div class="selector_result" onclick="setSelectorValue('${region}'); init()"> ${region} </div>`
-        })
-        .sort()
-        .join("");
-}
-
-
-function setSelectorValue(value) {
-    selectorHTML.value = value;
-}
+// set up event listeners
 
 answerAHTML.addEventListener("click", () => processClick(0));
 answerBHTML.addEventListener("click", () => processClick(1));
@@ -284,17 +263,12 @@ document.addEventListener("keyup", e => {
     if (e.code == "Enter" && !state.startedGame) init();
 });
 
-selectorHTML.addEventListener("change", setSelectorMatches);
-selectorHTML.addEventListener("keyup", e => {
-    var topResult = document.getElementsByClassName("selector_result")[0]
-    if (e.code == "Enter" && selectorHTML.value === "") { init(); return; }
-    if (e.code == "Enter" && selectorHTML.value === topResult.innerHTML.trim()) { init(); return; }
-    if (e.code == "Enter") selectorHTML.value = topResult.innerHTML.trim();
-
-    setSelectorMatches();
-});
-
+// start game
 
 deinit();
-selectorHTML.focus();
-setSelectorMatches();
+regionListHTML.innerHTML = regionList()
+    .map(region => {
+        return `<div class="regionListItem" onclick="setRegion('${region}'); init()"> ${region} </div>`
+    })
+    .sort()
+    .join("");

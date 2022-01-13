@@ -114,32 +114,22 @@ span#questionCapital {
 	background-color: var(--question-capital-color);
 }
 
-#region_selector {
-	width: 100%;
-	background: var(--dark-bg);
-	font-size: 1.5em;
-	padding: 1em;
-	border: none;
-	border-radius: 0.25em;
-	box-sizing: border-box;
-}
-
 #settings {
 	width: 100% 
 }
 
-#selector_results {
+#regionList {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
 }
 
-#settings .selector_result {
+#settings .regionListItem {
 	padding: 1em;
 	transition: 0.5s;
 }
 
-#settings .selector_result:hover {
+#settings .regionListItem:hover {
 	background: #d9d9d9;
 	color: black;
 }

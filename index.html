@@ -12,15 +12,14 @@
 <body>
 <div id=game>
 	<div id="toprow">
-		<p onclick="init()" id="question">you need javascript enabled to play this</p>
+		<p id="question">you need javascript enabled to play this</p>
         <div id="gameinfo">
-        <p id="time">time</p>
+		<p id="time">time</p>
 		<p id="score">score</p>
         </div>
 	</div>
 	<div style="display: none" id="settings">
-		<input placeholder="select a region (tap or type to filter)" id="region_selector" type="text">
-		<div id="selector_results"></div>
+		<div id="regionList"></div>
 		<div id="questionTypeSelector" >
 		  <p>guess capital</p>
 		  <label class="switch">
@@ -62,7 +61,7 @@
 	</div>
 </div>
 <p> built with ❤ and adequate amounts of care by <a href="https://alra.uk">alv</a></p>
-<script type="text/javascript" src="countries.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script type="text/javascript" src="countries.js"></script>
 <script type="text/javascript" src="game.js"></script>
 </body>
