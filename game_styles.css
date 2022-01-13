@@ -135,7 +135,13 @@ span#questionCapital {
 }
 
 #settings .selector_result {
-	margin: 1em;
+	padding: 1em;
+	transition: 0.5s;
+}
+
+#settings .selector_result:hover {
+	background: #d9d9d9;
+	color: black;
 }
 
 /* toggle switches */
@@ -208,3 +214,5 @@ input:checked + .slider:before {
 	margin-top: 3em;;
 	margin-bottom: 3em;;
 }
+
+
