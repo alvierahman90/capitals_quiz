@@ -98,7 +98,7 @@ function init() {
     answersHTML.style.display = "";
     settingsHTML.style.display = "none";
     questionHTML.onclick = deinit;
-    incorrectAnswersTable.innerHTML = "<tr> <th> question </th> <th> capital </th> <th> your answer </th> </tr>";
+    incorrectAnswersTable.innerHTML = "<tr> <th> question </th> <th> answer </th> <th> your answer </th> </tr>";
     correctAnswersTable.innerHTML = "<tr> <th> country </th> <th> capital </th>  </tr>";
 
     // start game
