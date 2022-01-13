@@ -18,20 +18,30 @@ def main(args):
     with open(args.file) as fp:
         countries = json.load(fp)
 
-    r = {}
+    country_list = {}
+    capital_list = {}
 
     for country in countries:
         if len(country['capital']) < 1 or country['capital'][0] == "" or not country['independent']:
             continue
-        r[country['name']['common']] = {
-                'capital': country['capital'][0],
+        country_list[country['name']['common']] = {
+                'answer': country['capital'][0],
+                'region': country['region'],
+                'subregion': country['subregion'],
+                'languages': country['languages']
+        }
+
+        capital_list[country['capital'][0]] = {
+                'answer': country['name']['common'],
                 'region': country['region'],
                 'subregion': country['subregion'],
                 'languages': country['languages']
         }
 
     print('countries = ', end='')
-    print(json.dumps(r))
+    print(json.dumps(country_list), end=';')
+    print('capitals = ', end='')
+    print(json.dumps(capital_list))
 
     return 0
 

@@ -10,6 +10,7 @@ const answerDHTML = document.getElementById("answer_d");
 const bodyHTML = document.getElementsByTagName("body")[0]
 const incorrectAnswersTable = document.getElementById('incorrectAnswersTable');
 const correctAnswersTable = document.getElementById('correctAnswersTable');
+const guessCheckboxHTML = document.getElementById('guessCheckbox');
 const previousQuestionAnswer = document.getElementById('previousQuestionAnswer');
 const previousQuestionText = document.getElementById('previousQuestionText');
 const resultsHTML = document.getElementById("results");
@@ -22,6 +23,7 @@ const timeHTML = document.getElementById("time");
 
 var gameTimeStartTime = 0;
 var gameTimeIntervalId = 0;
+const guessCountry = () => guessCheckboxHTML.checked;
 
 function updateTime() {
     const secondsPassed = ((new Date().getTime() - gameTimeStartTime.getTime())/1000)
@@ -29,9 +31,22 @@ function updateTime() {
     timeHTML.innerHTML = secondsPassed;
 }
 
-const capitals_list = Object.values(countries).map(country => country.capital);
-const regionList = [...new Set(Object.values(countries).map(country => country.region))]
-    .concat([...new Set(Object.values(countries).map(country => country.subregion))])
+const getMasterQuestionList = () => {
+  if(guessCountry()) return capitals
+  return countries;
+}
+
+const getQuestionHTML = (state) => {
+  if(guessCountry())
+    return `what country is <span id="questionCapital">${state.question}</span> the capital of?`
+  return `what is the capital of <span id="questionCountry">${state.question}</span>?`
+}
+
+const answer_list = Object.values(getMasterQuestionList()).map(item => item.answer);
+
+
+const regionList = [...new Set(Object.values(getMasterQuestionList()).map(item => item.region))]
+    .concat([...new Set(Object.values(getMasterQuestionList()).map(item => item.subregion))])
     .concat([ALL_REGIONS])
     .sort();
 const date = new Date();
@@ -68,8 +83,8 @@ function init() {
     if (selectorHTML.value == "" || selectorHTML.value == ALL_REGIONS) regex = new RegExp(".*");
     else regex = new RegExp(selectorHTML.value, "gi");
 
-    questionList = Object.keys(countries)
-        .filter(c => countries[c].region.match(regex) || countries[c].subregion.match(regex))
+    questionList = Object.keys(getMasterQuestionList())
+        .filter(c => getMasterQuestionList()[c].region.match(regex) || getMasterQuestionList()[c].subregion.match(regex))
         .sort(() => Math.random()-0.5);
 
     // set up state variable
@@ -87,7 +102,7 @@ function init() {
     answersHTML.style.display = "";
     settingsHTML.style.display = "none";
     questionHTML.onclick = deinit;
-    incorrectAnswersTable.innerHTML = "<tr> <th> country </th> <th> capital </th> <th> your answer </th> </tr>";
+    incorrectAnswersTable.innerHTML = "<tr> <th> question </th> <th> capital </th> <th> your answer </th> </tr>";
     correctAnswersTable.innerHTML = "<tr> <th> country </th> <th> capital </th>  </tr>";
 
     // start game
@@ -131,12 +146,12 @@ function updateState() {
     var newQuestion = questionList.pop();
     var options = []
     while (options.length < 4) {
-        var c = capitals_list[Math.floor(Math.random()*capitals_list.length)];
-        if (c !== countries[newQuestion].capital && !options.includes(c)){
+        var c = answer_list[Math.floor(Math.random()*answer_list.length)];
+        if (c !== getMasterQuestionList()[newQuestion].answer && !options.includes(c)){
             options.push(c);
         }
     }
-    options[Math.floor(Math.random()*4)] = countries[newQuestion].capital;
+    options[Math.floor(Math.random()*4)] = getMasterQuestionList()[newQuestion].answer;
 
     if (state.question) state.previousQuestion = {
         "question": state.question,
@@ -145,7 +160,7 @@ function updateState() {
     };
     state.question = newQuestion;
     state.options = options;
-    state.answer = countries[newQuestion].capital;
+    state.answer = getMasterQuestionList()[newQuestion].answer;
 }
 
 
@@ -160,7 +175,7 @@ function updateScreen(){
     answerBHTML.getElementsByClassName("text")[0].innerHTML = state.options[1];
     answerCHTML.getElementsByClassName("text")[0].innerHTML = state.options[2];
     answerDHTML.getElementsByClassName("text")[0].innerHTML = state.options[3];
-    questionHTML.innerHTML = `what is the capital of <span id="questionCountry">${state.question}</span>?`;
+    questionHTML.innerHTML = getQuestionHTML(state)
     if (state.previousQuestion ) {
         previousQuestionAnswer.innerHTML = state.previousQuestion.answer;
         previousQuestionText.style.display = "";
