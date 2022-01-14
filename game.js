@@ -1,6 +1,7 @@
 "use strict";
 
 const ALL_REGIONS = "All Regions";
+const FLAG_DIR = "flags";
 
 const answersHTML = document.getElementById("answers");
 const answerAHTML = document.getElementById("answer_a");
@@ -10,7 +11,6 @@ const answerDHTML = document.getElementById("answer_d");
 const bodyHTML = document.getElementsByTagName("body")[0]
 const incorrectAnswersTable = document.getElementById('incorrectAnswersTable');
 const correctAnswersTable = document.getElementById('correctAnswersTable');
-const guessCheckboxHTML = document.getElementById('guessCheckbox');
 const previousQuestionAnswer = document.getElementById('previousQuestionAnswer');
 const previousQuestionText = document.getElementById('previousQuestionText');
 const regionListHTML = document.getElementById("regionList");
@@ -23,7 +23,11 @@ const timeHTML = document.getElementById("time");
 var gameTimeStartTime = 0;
 var gameTimeIntervalId = 0;
 var selectedRegion = null;
-const guessCountry = () => guessCheckboxHTML.checked;
+
+const guessCapital = () => document.getElementById('questionTypeCapital').checked;
+const guessCountry = () => document.getElementById('questionTypeCountry').checked;
+const guessFlag = () => document.getElementById('questionTypeFlag').checked;
+const guessReverseFlag = () => document.getElementById('questionTypeReverseFlag').checked;
 
 const updateTime = () => {
     const secondsPassed = ((new Date().getTime() - gameTimeStartTime.getTime())/1000)
@@ -38,11 +42,20 @@ const getMasterQuestionList = () => {
 
 const getQuestionHTML = (state) => {
   if(guessCountry())
-    return `what country is <span id="questionCapital">${state.question}</span> the capital of?`
-  return `what is the capital of <span id="questionCountry">${state.question}</span>?`
+    return `what country is <span id="questionCapital">${state.question.capital}</span> the capital of?`
+  if (guessCapital())
+    return `what is the capital of <span id="questionCountry">${state.question.countryname}</span>?`
+  if(guessFlag())
+    return `what is the flag of <span id="questionCountry">${state.question.countryname}</span>?`
+  if(guessReverseFlag())
+    return `which country's flag is ${getImageURLFromCountryCode(state.question.code)}?`
 }
 
-const answer_list = () => Object.values(getMasterQuestionList()).map(item => item.answer);
+const answer_list = () => {
+  return Object.values(getMasterQuestionList());
+}
+
+const getImageURLFromCountryCode = (code) => `<img src="${FLAG_DIR}/${code}.svg" />`;
 
 
 const regionList = () => [...new Set(Object.values(getMasterQuestionList()).map(item => item.region))]
@@ -79,8 +92,8 @@ var resultsChart = new Chart(
 // set up game
 function init() {
     // generate question list
-    questionList = Object.keys(getMasterQuestionList())
-        .filter(c => getMasterQuestionList()[c].region == selectedRegion || getMasterQuestionList()[c].subregion == selectedRegion)
+    questionList = Object.values(getMasterQuestionList())
+        .filter(q => q.region == selectedRegion || q.subregion == selectedRegion)
         .sort(() => Math.random()-0.5);
 
     // set up state variable
@@ -138,24 +151,34 @@ function updateState() {
     if (questionList.length == 0) { state.finishedGame = true; return; }
 
     // set up new question
-    var newQuestion = questionList.pop();
+    const newQuestion = questionList.pop();
+    console.log(newQuestion);
+
     var options = []
     while (options.length < 4) {
         var c = answer_list()[Math.floor(Math.random()*answer_list().length)];
-        if (c !== getMasterQuestionList()[newQuestion].answer && !options.includes(c)){
+        var question = getMasterQuestionList()[newQuestion.countryname];
+        if (question == undefined) question = getMasterQuestionList()[newQuestion.capital];
+        console.log(c);
+        console.log(question);
+        if (c !== getMasterQuestionList()[newQuestion.countryname]&& !options.includes(c)){
             options.push(c);
         }
     }
-    options[Math.floor(Math.random()*4)] = getMasterQuestionList()[newQuestion].answer;
+    var question = getMasterQuestionList()[newQuestion.countryname];
+    if (question == undefined) question = getMasterQuestionList()[newQuestion.capital];
+    options[Math.floor(Math.random()*4)] = question;
 
     if (state.question) state.previousQuestion = {
         "question": state.question,
         "options": state.options,
         "answer": state.answer
     };
+
     state.question = newQuestion;
     state.options = options;
-    state.answer = getMasterQuestionList()[newQuestion].answer;
+    state.answer = question;
+    console.log(state);
 }
 
 
@@ -166,13 +189,25 @@ function updateScreen(){
 	    displayEndScreen();
         return;
     }
-    answerAHTML.getElementsByClassName("text")[0].innerHTML = state.options[0];
-    answerBHTML.getElementsByClassName("text")[0].innerHTML = state.options[1];
-    answerCHTML.getElementsByClassName("text")[0].innerHTML = state.options[2];
-    answerDHTML.getElementsByClassName("text")[0].innerHTML = state.options[3];
+    if (!guessFlag() && !guessReverseFlag()) {
+      answerAHTML.getElementsByClassName("text")[0].innerHTML = state.options[0].answer;
+      answerBHTML.getElementsByClassName("text")[0].innerHTML = state.options[1].answer;
+      answerCHTML.getElementsByClassName("text")[0].innerHTML = state.options[2].answer;
+      answerDHTML.getElementsByClassName("text")[0].innerHTML = state.options[3].answer;
+    } else if (guessReverseFlag()) {
+      answerAHTML.getElementsByClassName("text")[0].innerHTML = state.options[0].countryname;
+      answerBHTML.getElementsByClassName("text")[0].innerHTML = state.options[1].countryname;
+      answerCHTML.getElementsByClassName("text")[0].innerHTML = state.options[2].countryname;
+      answerDHTML.getElementsByClassName("text")[0].innerHTML = state.options[3].countryname;
+    } else {
+      answerAHTML.getElementsByClassName("text")[0].innerHTML = getImageURLFromCountryCode(state.options[0].code);
+      answerBHTML.getElementsByClassName("text")[0].innerHTML = getImageURLFromCountryCode(state.options[1].code);
+      answerCHTML.getElementsByClassName("text")[0].innerHTML = getImageURLFromCountryCode(state.options[2].code);
+      answerDHTML.getElementsByClassName("text")[0].innerHTML = getImageURLFromCountryCode(state.options[3].code);
+    }
     questionHTML.innerHTML = getQuestionHTML(state)
     if (state.previousQuestion ) {
-        previousQuestionAnswer.innerHTML = state.previousQuestion.answer;
+        previousQuestionAnswer.innerHTML = state.previousQuestion.question.answer;
         previousQuestionText.style.display = "";
     }
 }
@@ -185,14 +220,22 @@ function displayEndScreen() {
     
     clearInterval(gameTimeIntervalId);
 
+
 	state.incorrectAnswers.forEach(ans => {
 		var tr = document.createElement('tr');
+    console.log(ans)
+
 		tr.appendChild(document.createElement('td'))
-		tr.lastChild.innerHTML = ans.question
+		tr.lastChild.innerHTML = ans.question.countryname
+
 		tr.appendChild(document.createElement('td'))
-		tr.lastChild.innerHTML = ans.answer
+    if (guessFlag()) tr.lastChild.innerHTML = getImageURLFromCountryCode(ans.answer.code);
+		else tr.lastChild.innerHTML = ans.answer.answer;
+
 		tr.appendChild(document.createElement('td'))
-		tr.lastChild.innerHTML = ans.options[ans.userAnswer]
+    if (guessFlag()) tr.lastChild.innerHTML = getImageURLFromCountryCode(ans.options[ans.userAnswer].code);
+		else tr.lastChild.innerHTML = ans.options[ans.userAnswer].answer;
+
 		incorrectAnswersTable.appendChild(tr);
 	})
 	if (state.incorrectAnswers.length <= 0)
@@ -201,9 +244,10 @@ function displayEndScreen() {
 	state.correctAnswers.forEach(ans => {
 		var tr = document.createElement('tr');
 		tr.appendChild(document.createElement('td'))
-		tr.lastChild.innerHTML = ans.question
+		tr.lastChild.innerHTML = ans.question.countryname
 		tr.appendChild(document.createElement('td'))
-		tr.lastChild.innerHTML = ans.answer
+    if (guessFlag()) tr.lastChild.innerHTML = getImageURLFromCountryCode(ans.answer.code);
+		else tr.lastChild.innerHTML = ans.answer.answer;
 		correctAnswersTable.appendChild(tr);
 	})
 	if (state.correctAnswers.length <= 0)

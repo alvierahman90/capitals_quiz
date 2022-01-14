@@ -45,6 +45,16 @@ input {
 
 #question {
 	font-size: 1.5em;
+	display: flex;
+	align-items: center;
+}
+
+#question img {
+	max-height: 10vh;
+}
+
+#question * {
+	margin: 1em;
 }
 
 #score {
@@ -205,4 +215,4 @@ input:checked + .slider:before {
 	margin-bottom: 3em;;
 }
 
-
+.text img, td img { max-height: 15vh }

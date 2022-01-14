@@ -19,9 +19,9 @@ body {
 	font-family: monospace;
 	color: var(--default-fg);
 	font-size: 16px;
-	margin: 2em auto;
+	margin: 0 auto;
 	max-width: 800px;
-	padding: 5em;
+	padding: 2em;
 	line-height: 1.1;
 	text-align: justify;
 	background-color: var(--default-bg);

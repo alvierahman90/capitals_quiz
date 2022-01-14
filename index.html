@@ -21,12 +21,17 @@
 	<div style="display: none" id="settings">
 		<div id="regionList"></div>
 		<div id="questionTypeSelector" >
-		  <p>guess capital</p>
-		  <label class="switch">
-		  <input id="guessCheckbox" type="checkbox">
-		  <span class="slider round"></span>
-		  </label>
-		  <p>guess country</p>
+			<input type="radio" name="questionMode" value="capital" id="questionTypeCapital" checked>
+			<label for="questionTypeCapital">capital</label>
+
+			<input type="radio" name="questionMode" value="country" id="questionTypeCountry">
+			<label for="questionTypeCountry">country</label>
+
+			<input type="radio" name="questionMode" value="flag" id="questionTypeFlag">
+			<label for="questionTypeFlag">flag</label>
+
+			<input type="radio" name="questionMode" value="reverseflag" id="questionTypeReverseFlag">
+			<label for="questionTypeReverseFlag">reverseflag</label>
 		</div>
 	</div>
 	<div style="display: none" id="answers">

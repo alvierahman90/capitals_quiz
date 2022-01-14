@@ -26,16 +26,22 @@ def main(args):
             continue
         country_list[country['name']['common']] = {
                 'answer': country['capital'][0],
+                'capital': country['capital'],
+                'countryname': country['name']['common'],
                 'region': country['region'],
                 'subregion': country['subregion'],
-                'languages': country['languages']
+                'languages': country['languages'],
+                'code': country['cca3'].lower()
         }
 
         capital_list[country['capital'][0]] = {
                 'answer': country['name']['common'],
+                'capital': country['capital'][0],
+                'countryname': country['name']['common'],
                 'region': country['region'],
                 'subregion': country['subregion'],
-                'languages': country['languages']
+                'languages': country['languages'],
+                'code': country['cca3'].lower()
         }
 
     print('countries = ', end='')
