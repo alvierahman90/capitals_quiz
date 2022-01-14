@@ -216,3 +216,11 @@ input:checked + .slider:before {
 }
 
 .text img, td img { max-height: 15vh }
+
+#questionTypeSelector input[type="radio"] { display: none; }
+input[type="radio"]+label {
+	padding: 0.5em;
+}
+input[type="radio"]:checked+label {
+	background-color: var(--yellow);
+}
