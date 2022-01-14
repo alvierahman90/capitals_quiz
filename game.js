@@ -93,7 +93,7 @@ var resultsChart = new Chart(
 function init() {
     // generate question list
     questionList = Object.values(getMasterQuestionList())
-        .filter(q => q.region == selectedRegion || q.subregion == selectedRegion)
+        .filter(q => q.region == selectedRegion || q.subregion == selectedRegion || selectedRegion == ALL_REGIONS)
         .sort(() => Math.random()-0.5);
 
     // set up state variable
