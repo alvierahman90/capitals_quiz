@@ -220,36 +220,70 @@ function displayEndScreen() {
     
     clearInterval(gameTimeIntervalId);
 
+    if (guessReverseFlag() || guessFlag()) {
+      incorrectAnswersTable.innerHTML = "<tr> <th> country </th> <th> answer </th> <th> your answer </th> </tr>";
+      correctAnswersTable.innerHTML = "<tr> <th> flag </th> <th> country </th>  </tr>";
+    }
 
-	state.incorrectAnswers.forEach(ans => {
-		var tr = document.createElement('tr');
-    console.log(ans)
+  if (guessReverseFlag()) {
+    state.incorrectAnswers.forEach(ans => {
+      var tr = document.createElement('tr');
+      console.log(ans)
 
-		tr.appendChild(document.createElement('td'))
-		tr.lastChild.innerHTML = ans.question.countryname
+      tr.appendChild(document.createElement('td'))
+      tr.lastChild.innerHTML = ans.question.countryname
 
-		tr.appendChild(document.createElement('td'))
-    if (guessFlag()) tr.lastChild.innerHTML = getImageURLFromCountryCode(ans.answer.code);
-		else tr.lastChild.innerHTML = ans.answer.answer;
+      tr.appendChild(document.createElement('td'))
+      tr.lastChild.innerHTML = getImageURLFromCountryCode(ans.answer.code);
 
-		tr.appendChild(document.createElement('td'))
-    if (guessFlag()) tr.lastChild.innerHTML = getImageURLFromCountryCode(ans.options[ans.userAnswer].code);
-		else tr.lastChild.innerHTML = ans.options[ans.userAnswer].answer;
+      tr.appendChild(document.createElement('td'))
+      tr.lastChild.innerHTML = getImageURLFromCountryCode(ans.options[ans.userAnswer].code);
 
-		incorrectAnswersTable.appendChild(tr);
-	})
-	if (state.incorrectAnswers.length <= 0)
-		incorrectAnswersTable.innerHTML = "no incorrect answers! go you!";
+      incorrectAnswersTable.appendChild(tr);
+    })
+    if (state.incorrectAnswers.length <= 0)
+      incorrectAnswersTable.innerHTML = "no incorrect answers! go you!";
 
-	state.correctAnswers.forEach(ans => {
-		var tr = document.createElement('tr');
-		tr.appendChild(document.createElement('td'))
-		tr.lastChild.innerHTML = ans.question.countryname
-		tr.appendChild(document.createElement('td'))
-    if (guessFlag()) tr.lastChild.innerHTML = getImageURLFromCountryCode(ans.answer.code);
-		else tr.lastChild.innerHTML = ans.answer.answer;
-		correctAnswersTable.appendChild(tr);
-	})
+    state.correctAnswers.forEach(ans => {
+      var tr = document.createElement('tr');
+      tr.appendChild(document.createElement('td'))
+      tr.lastChild.innerHTML = getImageURLFromCountryCode(ans.question.code);
+      tr.appendChild(document.createElement('td'))
+      tr.lastChild.innerHTML = ans.answer.countryname;
+      correctAnswersTable.appendChild(tr);
+    })
+  } else {
+    state.incorrectAnswers.forEach(ans => {
+      var tr = document.createElement('tr');
+      console.log(ans)
+
+      tr.appendChild(document.createElement('td'))
+      if (guessCountry()) tr.lastChild.innerHTML = ans.question.capital
+      else tr.lastChild.innerHTML = ans.question.countryname
+
+      tr.appendChild(document.createElement('td'))
+      if (guessFlag()) tr.lastChild.innerHTML = getImageURLFromCountryCode(ans.answer.code);
+      else tr.lastChild.innerHTML = ans.answer.answer;
+
+      tr.appendChild(document.createElement('td'))
+      if (guessFlag()) tr.lastChild.innerHTML = getImageURLFromCountryCode(ans.options[ans.userAnswer].code);
+      else tr.lastChild.innerHTML = ans.options[ans.userAnswer].answer;
+
+      incorrectAnswersTable.appendChild(tr);
+    })
+    if (state.incorrectAnswers.length <= 0)
+      incorrectAnswersTable.innerHTML = "no incorrect answers! go you!";
+
+    state.correctAnswers.forEach(ans => {
+      var tr = document.createElement('tr');
+      tr.appendChild(document.createElement('td'))
+      tr.lastChild.innerHTML = ans.question.countryname
+      tr.appendChild(document.createElement('td'))
+      if (guessFlag()) tr.lastChild.innerHTML = getImageURLFromCountryCode(ans.answer.code);
+      else tr.lastChild.innerHTML = ans.answer.capital;
+      correctAnswersTable.appendChild(tr);
+    })
+  }
 	if (state.correctAnswers.length <= 0)
 		correctAnswersTable.innerHTML = "no correct answers. better luck next time :')";
 
