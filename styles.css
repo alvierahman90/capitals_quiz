@@ -1,35 +1,35 @@
 @import url("https://alv.cx/styles.css");
 
 :root {
-	--default-bg: #fefefe;
-	--dark-bg: #b8b8b8;
-	--selected-bg:#383838;
-	--default-fg: #454545;
-	--red:        #ab4642;
-	--orange:     #dc9656;
-	--yellow:     #f7ca88;
-	--green:      #a1b56c;
-	--teal:       #86c1b9;
-	--blue:       #7cafc2;
-	--purple:     #ba8baf;
-	--brown:      #a16946;
+  --default-bg: #fefefe;
+  --dark-bg: #b8b8b8;
+  --selected-bg: #383838;
+  --default-fg: #454545;
+  --red: #ab4642;
+  --orange: #dc9656;
+  --yellow: #f7ca88;
+  --green: #a1b56c;
+  --teal: #86c1b9;
+  --blue: #7cafc2;
+  --purple: #ba8baf;
+  --brown: #a16946;
 }
 
 body {
-	font-family: monospace;
-	color: var(--default-fg);
-	font-size: 16px;
-	margin: 0 auto;
-	max-width: 800px;
-	padding: 2em;
-	line-height: 1.1;
-	text-align: justify;
-	background-color: var(--default-bg);
+  font-family: monospace;
+  color: var(--default-fg);
+  font-size: 16px;
+  margin: 0 auto;
+  max-width: 800px;
+  padding: 2em;
+  line-height: 1.1;
+  text-align: justify;
+  background-color: var(--default-bg);
 }
 
 @media only screen and (max-width: 600px) {
-	body {
-		margin: 0em auto;
-		padding: 2em;
-	}
+  body {
+    margin: 0em auto;
+    padding: 2em;
+  }
 }
