@@ -36,8 +36,45 @@ const updateTime = () => {
 }
 
 const getMasterQuestionList = () => {
-  if(guessCountry()) return capitals
   return countries;
+}
+
+const getQuestionByCountryName = (name) => {
+  c = getMasterQuestionList().filter(c => c.countryname === name)
+  if (c.length > 0) return c[0]
+  return null
+}
+
+const getQuestionByCapital = (capital) => {
+  c = getMasterQuestionList().filter(c => c.capital === capital)
+  if (c.length > 0) return c[0]
+  return null
+}
+
+const optionToAnswer = (option) => {
+  if (guessCapital()) return option.capital;
+  else if (guessCountry()) return option.countryname;
+  else if (guessReverseFlag()) return option.countryname;
+  else return option.code;
+}
+
+const optionToAnswerFormatted = (option) => {
+  const r = optionToAnswer(option);
+  if (guessFlag()) return getImageURLFromCountryCode(r);
+  return r
+}
+
+const optionToQuestion = (option) => {
+  if (guessCapital()) return option.countryname;
+  else if (guessCountry()) return option.capital;
+  else if (guessReverseFlag()) return option.code;
+  else return option.countryname;
+}
+
+const optionToQuestionFormatted = (option) => {
+  const r = optionToQuestion(option);
+  if (guessReverseFlag()) return getImageURLFromCountryCode(r);
+  return r
 }
 
 const getQuestionHTML = (state) => {
@@ -51,15 +88,20 @@ const getQuestionHTML = (state) => {
     return `which country's flag is ${getImageURLFromCountryCode(state.question.code)}?`
 }
 
-const answer_list = () => {
-  return Object.values(getMasterQuestionList());
+const answerList = () => {
+  return getMasterQuestionList().map(q => {
+    if (guessCountry()) return q.countryname;
+    if (guessCapital()) return q.capital;
+    if (guessFlag()) return q.code;
+    if (guessReverseFlag()) return q.countryname;
+  })
 }
+
 
 const getImageURLFromCountryCode = (code) => `<img src="${FLAG_DIR}/${code}.svg" />`;
 
-
-const regionList = () => [...new Set(Object.values(getMasterQuestionList()).map(item => item.region))]
-    .concat([...new Set(Object.values(getMasterQuestionList()).map(item => item.subregion))])
+const regionList = () => [...new Set(getMasterQuestionList().map(item => item.region))]
+    .concat([...new Set(getMasterQuestionList().map(item => item.subregion))])
     .concat([ALL_REGIONS])
     .sort();
 const date = new Date();
@@ -92,7 +134,7 @@ var resultsChart = new Chart(
 // set up game
 function init() {
     // generate question list
-    questionList = Object.values(getMasterQuestionList())
+    questionList = getMasterQuestionList()
         .filter(q => q.region == selectedRegion || q.subregion == selectedRegion || selectedRegion == ALL_REGIONS)
         .sort(() => Math.random()-0.5);
 
@@ -156,17 +198,17 @@ function updateState() {
 
     var options = []
     while (options.length < 4) {
-        var c = answer_list()[Math.floor(Math.random()*answer_list().length)];
-        var question = getMasterQuestionList()[newQuestion.countryname];
-        if (question == undefined) question = getMasterQuestionList()[newQuestion.capital];
+        var c = getMasterQuestionList()[Math.floor(Math.random()*answerList().length)];
+        var question = getQuestionByCountryName(newQuestion.countryname);
+        if (question == undefined) question = getQuestionByCapital(newQuestion.capital);
         console.log(c);
         console.log(question);
-        if (c !== getMasterQuestionList()[newQuestion.countryname]&& !options.includes(c)){
+        if (c !== getQuestionByCountryName(newQuestion.countryname)&& !options.includes(c)){
             options.push(c);
         }
     }
-    var question = getMasterQuestionList()[newQuestion.countryname];
-    if (question == undefined) question = getMasterQuestionList()[newQuestion.capital];
+    var question = getQuestionByCountryName(newQuestion.countryname);
+    if (question == undefined) question = getQuestionByCapital(newQuestion.capital);
     options[Math.floor(Math.random()*4)] = question;
 
     if (state.question) state.previousQuestion = {
@@ -189,25 +231,15 @@ function updateScreen(){
 	    displayEndScreen();
         return;
     }
-    if (!guessFlag() && !guessReverseFlag()) {
-      answerAHTML.getElementsByClassName("text")[0].innerHTML = state.options[0].answer;
-      answerBHTML.getElementsByClassName("text")[0].innerHTML = state.options[1].answer;
-      answerCHTML.getElementsByClassName("text")[0].innerHTML = state.options[2].answer;
-      answerDHTML.getElementsByClassName("text")[0].innerHTML = state.options[3].answer;
-    } else if (guessReverseFlag()) {
-      answerAHTML.getElementsByClassName("text")[0].innerHTML = state.options[0].countryname;
-      answerBHTML.getElementsByClassName("text")[0].innerHTML = state.options[1].countryname;
-      answerCHTML.getElementsByClassName("text")[0].innerHTML = state.options[2].countryname;
-      answerDHTML.getElementsByClassName("text")[0].innerHTML = state.options[3].countryname;
-    } else {
-      answerAHTML.getElementsByClassName("text")[0].innerHTML = getImageURLFromCountryCode(state.options[0].code);
-      answerBHTML.getElementsByClassName("text")[0].innerHTML = getImageURLFromCountryCode(state.options[1].code);
-      answerCHTML.getElementsByClassName("text")[0].innerHTML = getImageURLFromCountryCode(state.options[2].code);
-      answerDHTML.getElementsByClassName("text")[0].innerHTML = getImageURLFromCountryCode(state.options[3].code);
-    }
+
+    answerAHTML.getElementsByClassName("text")[0].innerHTML = optionToAnswerFormatted(state.options[0]);
+    answerBHTML.getElementsByClassName("text")[0].innerHTML = optionToAnswerFormatted(state.options[1]);
+    answerCHTML.getElementsByClassName("text")[0].innerHTML = optionToAnswerFormatted(state.options[2]);
+    answerDHTML.getElementsByClassName("text")[0].innerHTML = optionToAnswerFormatted(state.options[3]);
+
     questionHTML.innerHTML = getQuestionHTML(state)
     if (state.previousQuestion ) {
-        previousQuestionAnswer.innerHTML = state.previousQuestion.question.answer;
+        previousQuestionAnswer.innerHTML = optionToAnswerFormatted(state.previousQuestion.question);
         previousQuestionText.style.display = "";
     }
 }
@@ -225,19 +257,18 @@ function displayEndScreen() {
       correctAnswersTable.innerHTML = "<tr> <th> flag </th> <th> country </th>  </tr>";
     }
 
-  if (guessReverseFlag()) {
     state.incorrectAnswers.forEach(ans => {
       var tr = document.createElement('tr');
       console.log(ans)
 
       tr.appendChild(document.createElement('td'))
-      tr.lastChild.innerHTML = ans.question.countryname
+      tr.lastChild.innerHTML = optionToQuestionFormatted(ans.question)
 
       tr.appendChild(document.createElement('td'))
-      tr.lastChild.innerHTML = getImageURLFromCountryCode(ans.answer.code);
+      tr.lastChild.innerHTML = optionToAnswerFormatted(ans.answer);
 
       tr.appendChild(document.createElement('td'))
-      tr.lastChild.innerHTML = getImageURLFromCountryCode(ans.options[ans.userAnswer].code);
+      tr.lastChild.innerHTML = optionToAnswerFormatted(ans.options[ans.userAnswer]);
 
       incorrectAnswersTable.appendChild(tr);
     })
@@ -247,43 +278,11 @@ function displayEndScreen() {
     state.correctAnswers.forEach(ans => {
       var tr = document.createElement('tr');
       tr.appendChild(document.createElement('td'))
-      tr.lastChild.innerHTML = getImageURLFromCountryCode(ans.question.code);
+      tr.lastChild.innerHTML = optionToQuestionFormatted(ans.question);
       tr.appendChild(document.createElement('td'))
-      tr.lastChild.innerHTML = ans.answer.countryname;
+      tr.lastChild.innerHTML = optionToAnswerFormatted(ans.answer);
       correctAnswersTable.appendChild(tr);
     })
-  } else {
-    state.incorrectAnswers.forEach(ans => {
-      var tr = document.createElement('tr');
-      console.log(ans)
-
-      tr.appendChild(document.createElement('td'))
-      if (guessCountry()) tr.lastChild.innerHTML = ans.question.capital
-      else tr.lastChild.innerHTML = ans.question.countryname
-
-      tr.appendChild(document.createElement('td'))
-      if (guessFlag()) tr.lastChild.innerHTML = getImageURLFromCountryCode(ans.answer.code);
-      else tr.lastChild.innerHTML = ans.answer.answer;
-
-      tr.appendChild(document.createElement('td'))
-      if (guessFlag()) tr.lastChild.innerHTML = getImageURLFromCountryCode(ans.options[ans.userAnswer].code);
-      else tr.lastChild.innerHTML = ans.options[ans.userAnswer].answer;
-
-      incorrectAnswersTable.appendChild(tr);
-    })
-    if (state.incorrectAnswers.length <= 0)
-      incorrectAnswersTable.innerHTML = "no incorrect answers! go you!";
-
-    state.correctAnswers.forEach(ans => {
-      var tr = document.createElement('tr');
-      tr.appendChild(document.createElement('td'))
-      tr.lastChild.innerHTML = ans.question.countryname
-      tr.appendChild(document.createElement('td'))
-      if (guessFlag()) tr.lastChild.innerHTML = getImageURLFromCountryCode(ans.answer.code);
-      else tr.lastChild.innerHTML = ans.answer.capital;
-      correctAnswersTable.appendChild(tr);
-    })
-  }
 	if (state.correctAnswers.length <= 0)
 		correctAnswersTable.innerHTML = "no correct answers. better luck next time :')";
 
@@ -345,8 +344,6 @@ document.addEventListener("keyup", e => {
 
 deinit();
 regionListHTML.innerHTML = regionList()
-    .map(region => {
-        return `<div class="regionListItem" onclick="setRegion('${region}'); init()"> ${region} </div>`
-    })
-    .sort()
-    .join("");
+  .map(region => `<div class="regionListItem" onclick="setRegion('${region}'); init()"> ${region} </div>`)
+  .sort()
+  .join("");

@@ -224,3 +224,12 @@ input[type="radio"]+label {
 input[type="radio"]:checked+label {
 	background-color: var(--yellow);
 }
+
+#previousQuestionAnswer {
+	display: inline;
+}
+
+#previousQuestionAnswer img {
+	display: inline; 
+	max-height: 2em;
+}

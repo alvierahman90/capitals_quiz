@@ -6,7 +6,7 @@ countries.js: countries/countries.json .PHONY
 	python3 scripts/generate_countries_list.py countries/countries.json > countries.js
 
 flags: .SUBMODULES
-	mkdir flags
+	mkdir -p flags
 	cp countries/data/*.svg flags
 
 clean:
