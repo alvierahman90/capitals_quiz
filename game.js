@@ -47,13 +47,13 @@ const getMasterQuestionList = () => {
 };
 
 const getQuestionByCountryName = (name) => {
-  c = getMasterQuestionList().filter((c) => c.countryname === name);
+  var c = getMasterQuestionList().filter((c) => c.countryname === name);
   if (c.length > 0) return c[0];
   return null;
 };
 
 const getQuestionByCapital = (capital) => {
-  c = getMasterQuestionList().filter((c) => c.capital === capital);
+  var c = getMasterQuestionList().filter((c) => c.capital === capital);
   if (c.length > 0) return c[0];
   return null;
 };
