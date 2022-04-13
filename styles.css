@@ -1,18 +1,6 @@
-@import url("https://styles.alv.cx/modules/colors/base16-default.css");
+@import url("https://styles.alv.cx/colors/base16-default.css");
 @import url("https://styles.alv.cx/base.css");
 @import url("https://styles.alv.cx/modules/darkmode.css");
-@import url("https://styles.alv.cx/modules/colors/gruvbox.css");
-
-:root {
-  --red: #ab4642;
-  --orange: #dc9656;
-  --yellow: #f7ca88;
-  --green: #a1b56c;
-  --teal: #86c1b9;
-  --blue: #7cafc2;
-  --purple: #ba8baf;
-  --brown: #a16946;
-}
 
 body {
   font-family: monospace;
