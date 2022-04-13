@@ -33,13 +33,13 @@ input {
 
 @keyframes incorrect {
   0% {
-    background: var(--default-bg);
+    background: var(--bg);
   }
   50% {
     background: var(--red);
   }
   100% {
-    background: var(--default-bg);
+    background: var(--bg);
   }
 }
 
@@ -92,6 +92,7 @@ input {
 
 #previousQuestionAnswer {
   background: var(--green);
+  color: var(--dark);
 }
 
 #game .answer {
