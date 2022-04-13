@@ -74,10 +74,12 @@ input {
   --okay: var(--yellow);
   --bad: var(--red);
   background: var(--good);
+  color: var(--dark);
 }
 
 #time {
   background: var(--blue);
+  color: var(--dark);
 }
 
 #gameinfo {
@@ -154,8 +156,8 @@ span#questionCapital {
 }
 
 #settings .regionListItem:hover {
-  background: #d9d9d9;
-  color: black;
+  background: var(--light);
+  color: var(--dark);
 }
 
 /* toggle switches */
@@ -242,6 +244,7 @@ input[type="radio"] + label {
 }
 input[type="radio"]:checked + label {
   background-color: var(--yellow);
+  color: var(--dark);
 }
 
 #previousQuestionAnswer {
