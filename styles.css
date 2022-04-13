@@ -3,10 +3,6 @@
 @import url("https://styles.alv.cx/modules/colors/gruvbox.css");
 
 :root {
-  --default-bg: #fefefe;
-  --dark-bg: #b8b8b8;
-  --selected-bg: #383838;
-  --default-fg: #454545;
   --red: #ab4642;
   --orange: #dc9656;
   --yellow: #f7ca88;

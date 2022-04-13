@@ -21,13 +21,13 @@ input {
 
 @keyframes correct {
   0% {
-    background: var(--default-bg);
+    background: var(--bg);
   }
   50% {
     background: var(--green);
   }
   100% {
-    background: var(--default-bg);
+    background: var(--bg);
   }
 }
 
