@@ -3,7 +3,7 @@
   --b-color: var(--yellow);
   --c-color: var(--green);
   --d-color: var(--blue);
-  --question-country-color: var(--teal);
+  --question-country-color: var(--base16-teal);
   --question-capital-color: var(--blue);
 }
 
