@@ -115,29 +115,35 @@ input {
 #a {
   background-color: var(--a-color);
   border-color: var(--a-color);
+  color: var(--dark);
 }
 
 #b {
   background-color: var(--b-color);
   border-color: var(--b-color);
+  color: var(--dark);
 }
 
 #c {
   background-color: var(--c-color);
   border-color: var(--c-color);
+  color: var(--dark);
 }
 
 #d {
   background-color: var(--d-color);
   border-color: var(--d-color);
+  color: var(--dark);
 }
 
 span#questionCountry {
   background-color: var(--question-country-color);
+  color: var(--dark);
 }
 
 span#questionCapital {
   background-color: var(--question-capital-color);
+  color: var(--dark);
 }
 
 #settings {
